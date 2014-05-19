@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Demo</title>
+	<style>
+
+	body {
+		margin: 0;
+	}
+
+	article {
+		display: block;
+	}
+	section {
+		display: block;
+		height: 300px;
+		padding: 1em;
+		color: #fff;
+		transition: background-color .3s ease 0;
+	}
+
+	section:nth-child(3n+0) {
+		background-color: #069;
+	}
+
+	section:nth-child(3n+1){
+		background-color: #906;
+	}
+
+	section:nth-child(3n+2){
+		background-color: #690;
+	}
+
+	section h1 {
+		margin: 0;
+		font-size: 2em;
+		line-height: 300px;
+		text-align: center;
+		transition: font-size .3s ease 0;
+	}
+
+	section.active {
+		background-color: #960;
+	}
+
+	section.active h1 {
+		font-size: 3em;
+	}
+
+	</style>
+</head>
+<body>
+
+	<article id="holder"></article>
+
+	<script src="../bower_components/jquery/dist/jquery.js"></script>
+	<script src="../src/breakpoint.js"></script>
+
+	<script>
+
+	// Render demo sections
+	(function(){
+		var len, i, $holder;
+		
+		len = 30;
+		$holder = $("#holder");
+
+		for(i=0; i<len; i++){
+			$holder.append(
+				$("<section>").append(
+					$("<h1>").text("SECTION: " + i)
+				)
+			);
+		}
+	}());
+
+	// Breakpoint
+	(function(){
+		var bp, points, $sections;
+
+		bp = new $.Breakpoint();
+		points = [];
+		$sections = $("section");
+
+		$sections.each(function(){
+			points.push($(this).offset().top - 100)
+		});
+
+		bp.config({
+			points: points,
+			target: function(){
+				return $(window).scrollTop();
+			}
+		})
+		.on("break", function(e, pos){
+			$sections.removeClass("active");
+			if(pos.index >= 0){
+				$sections.eq(pos.index).addClass("active");
+			}
+		})
+		.watch();
+
+		window.bp = bp;
+	}());
+
+	</script>
+	
+</body>
+</html>

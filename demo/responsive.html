@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Demo</title>
+	<style>
+
+	body {
+		background-color: #999;
+		margin: 0;
+		transition: background-color .3s ease 0;
+	}
+	.lt-1280 body {
+		background-color: #609;
+	}
+	.lt-1024 body {
+		background-color: #096;
+	}
+	.lt-768 body {
+		background-color: #960;
+	}
+	.lt-568 body {
+		background-color: #690;
+	}
+	.lt-480 body {
+		background-color: #906;
+	}
+	.lt-320 body {
+		background-color: #069;
+	}
+	article {
+		display: block;
+		padding: 1em;
+	}
+
+	</style>
+</head>
+<body>
+
+	<article id="demo">
+		<h1>JS Based Responsive Page</h1>
+		<dl>
+			<dt>Width:</dt>
+			<dd id="value-width"></dd>
+			<dt>Index:</dt>
+			<dd id="value-index"></dd>
+			<dt>Class:</dt>
+			<dd id="value-class"></dd>
+		</dl>
+	</article>
+
+	<script src="../bower_components/jquery/dist/jquery.js"></script>
+	<script src="../src/breakpoint.js"></script>
+	<script>
+
+	(function(){
+
+		var points = [320, 480, 568, 768, 1024, 1280];
+		var classes = [];
+		var handlers = {
+			"break": function(e, pos){
+				var $html = $("html");
+				if(pos.index >= 0){
+					$.each(classes, function(i, name){
+						$html.toggleClass(name, i > pos.index);
+					});
+				}
+			},
+			"change": function(e, pos){
+				$("#value-width").text(pos.value + "px");
+				$("#value-index").text(pos.index);
+				$("#value-class").text($("html").attr("class"));
+			}
+		};
+
+		$.each(points, function(i, point){
+			classes.push("lt-" + point);
+		});
+
+		var bp = new $.Breakpoint({
+			eventName: "resize",
+			eventTarget: $(window),
+			points: points,
+			target: function(){
+				return $(window).width();
+			}
+		})
+		.on(handlers)
+		.watch();
+
+		window.bp = bp;
+		
+	}());
+
+	</script>
+	
+</body>
+</html>
